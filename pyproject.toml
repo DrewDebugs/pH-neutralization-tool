@@ -1,0 +1,9 @@
+[project]
+name = "phsim"
+version = "1.0.0"
+description = "pH neutralization design and control model (course project)"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

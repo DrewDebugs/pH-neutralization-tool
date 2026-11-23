@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theory · pH Neutralization Tool</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+</head>
+<body>
+  <header class="site"><div class="inner">
+    <a class="brand" href="index.html">pH Neutralization Tool</a>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="tool.html">Tool</a>
+      <a href="theory.html" aria-current="page">Theory</a>
+      <a href="ai-process.html">AI Process</a>
+      <a href="model-comparison.html">Model Comparison</a>
+      <a href="video.html">Video & Transcript</a>
+      <a href="learned.html">What I Learned</a>
+      <a href="references.html">References</a>
+    </nav>
+  </div></header>
+  <main>
+    <h1>Theory: every equation next to its code</h1>
+    <p class="lead">The code shown beside each equation is read from the running model with
+      Python's <code>inspect.getsource()</code>, so it is exactly the code that produced the plots.</p>
+    <div class="card">
+      <h2 style="margin-top:0">Assumptions</h2>
+      <ol>
+        <li>25 °C, ideal solutions (activity coefficients = 1). K<sub>w</sub> = 1.0×10<sup>−14</sup>; acetic acid K<sub>a</sub> = 1.75×10<sup>−5</sup> (pK<sub>a</sub> 4.757).</li>
+        <li>HCl and NaOH fully dissociated; acid–base reactions are instantaneous (equilibrium at every instant). Only mixing is dynamic.</li>
+        <li>Each tank is a perfectly mixed CSTR with constant volume (overflow); volumes are additive, so outlet flow = inlet flow + reagent flow.</li>
+        <li>Influent contains no sodium. Reagent is an NaOH solution (no heat of dilution).</li>
+        <li>pH probe = first-order lag τ<sub>m</sub>; transport dead time θ in the measurement path (rounded to whole time steps).</li>
+        <li>Valve: delivered flow follows the controller output through a first-order lag τ<sub>v</sub>, limited to [0, F<sub>R,max</sub>]; linear characteristic, no stiction.</li>
+        <li>No CO<sub>2</sub> exchange, no precipitation, no temperature effects.</li>
+      </ol>
+      <h3>State variables: reaction invariants</h3>
+      <p>Per tank: <em>a</em> = total chloride, <em>b</em> = total sodium, <em>w</em> = total acetate (mol/L).
+        Neutralization moves H<sup>+</sup> around but cannot create or destroy Cl, Na or total acetate,
+        so their balances are pure mixing balances with no reaction term. pH is then <em>calculated</em>
+        from them (charge balance), not integrated — which removes the numerical stiffness that a
+        [H<sup>+</sup>] balance would have near pH 7.</p>
+      <h3>Why a valve lag?</h3>
+      <p>A tank (1st order) plus a probe (1st order) under P-only control is a 2nd-order loop, which is
+        stable for <em>every</em> K<sub>c</sub> &gt; 0 — Routh gives no upper limit. Real loops always have a
+        third lag or dead time; the valve lag provides it in an exactly analyzable way.
+        Set τ<sub>v</sub> = 0 and θ = 0 in the tool and the stability limit becomes ∞.</p>
+      <h3>Key result</h3>
+      <p>The linearized tank is G<sub>p</sub>(s) = K<sub>p</sub>/(τs + 1) with τ = V/Q, and K<sub>p</sub> is exactly the
+        slope of the titration curve. With P-only control the Routh limit is
+        K<sub>c,u</sub> = (a<sub>1</sub>a<sub>2</sub>/a<sub>3</sub> − 1)/K<sub>p</sub>: the lags set the numerator and the chemistry
+        sets the denominator. The stable gain range shrinks by exactly the factor the titration slope grows,
+        while the oscillation period P<sub>u</sub> = 2π√(a<sub>3</sub>/a<sub>1</sub>) does not change at all.</p>
+    </div>
+    <p id="status" class="muted"></p>
+    <div id="equations"></div>
+    <div class="card">
+      <h2 style="margin-top:0">Beyond scope</h2>
+      <p>Alkaline influents, lime/soda ash and carbonate chemistry, activity coefficients, temperature
+        dependence of K<sub>w</sub> and K<sub>a</sub>, non-ideal mixing, valve characteristics and stiction,
+        gain scheduling / titration-curve characterizers, feedforward, model predictive control,
+        adaptive control and nonlinear observers.</p>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pyodide@0.29.5/pyodide.js"></script>
+  <script src="js/py.js"></script>
+  <script src="js/theory.js"></script>
+</body>
+</html>

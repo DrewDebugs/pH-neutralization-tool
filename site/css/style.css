@@ -1,0 +1,109 @@
+/* One small stylesheet for every page. Colors are variables so dark mode
+   only has to redefine them. */
+:root {
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #1d1f21;
+  --muted: #5f6368;
+  --border: #d9dcdf;
+  --accent: #1f6f8b;
+  --accent-text: #ffffff;
+  --good: #2e7d32;
+  --bad: #c62828;
+  --code-bg: #f1f3f4;
+  --plot-grid: #e3e5e8;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15171a;
+    --surface: #1e2125;
+    --text: #e6e8ea;
+    --muted: #a0a6ad;
+    --border: #353a40;
+    --accent: #5fb3d3;
+    --accent-text: #0b1a20;
+    --good: #81c784;
+    --bad: #ef9a9a;
+    --code-bg: #262a2f;
+    --plot-grid: #2f343a;
+  }
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+header.site {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+header.site .inner, main { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+header.site .inner { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 18px; padding-top: 10px; padding-bottom: 10px; }
+header.site .brand { font-weight: 700; margin-right: auto; text-decoration: none; color: var(--text); }
+header.site nav { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; }
+header.site nav a { text-decoration: none; color: var(--muted); }
+header.site nav a[aria-current="page"] { color: var(--accent); font-weight: 600; }
+main { padding-top: 24px; padding-bottom: 48px; }
+h1 { font-size: 1.7rem; margin: 0 0 12px; }
+h2 { font-size: 1.25rem; margin: 32px 0 10px; }
+h3 { font-size: 1.05rem; margin: 20px 0 8px; }
+p.lead { font-size: 1.08rem; max-width: 760px; }
+.muted { color: var(--muted); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.note { border-left: 4px solid var(--accent); padding: 8px 12px; background: var(--surface); margin: 12px 0; }
+.placeholder { border: 2px dashed var(--border); border-radius: 8px; padding: 24px; color: var(--muted); }
+
+/* ---------- tool layout ---------- */
+.tool { display: grid; grid-template-columns: 360px 1fr; gap: 20px; align-items: start; }
+@media (max-width: 900px) { .tool { grid-template-columns: 1fr; } }
+fieldset { border: 1px solid var(--border); border-radius: 8px; margin: 0 0 12px; padding: 8px 12px 12px; background: var(--surface); }
+legend { font-weight: 600; padding: 0 4px; }
+label.field { display: grid; grid-template-columns: 1fr 92px; gap: 8px; align-items: center; font-size: 14px; margin: 4px 0; }
+label.field .unit { color: var(--muted); font-size: 12px; }
+input[type=number], select {
+  width: 100%; padding: 4px 6px; font: inherit; font-size: 14px;
+  color: var(--text); background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+}
+table.grid { width: 100%; border-collapse: collapse; font-size: 13px; }
+table.grid th, table.grid td { padding: 3px 4px; text-align: left; border-bottom: 1px solid var(--border); }
+table.grid th { color: var(--muted); font-weight: 600; }
+table.grid input { min-width: 56px; }
+.scroll-x { overflow-x: auto; }
+button {
+  font: inherit; font-weight: 600; border: 0; border-radius: 6px; padding: 8px 14px; cursor: pointer;
+  background: var(--accent); color: var(--accent-text);
+}
+button.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+button:disabled { opacity: 0.5; cursor: wait; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
+#status { font-size: 14px; color: var(--muted); min-height: 1.5em; }
+.plots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 1100px) { .plots { grid-template-columns: 1fr; } }
+.plot { width: 100%; height: 340px; }
+.plot-card h3 { margin-top: 0; }
+.plot-card p { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+.ok { color: var(--good); font-weight: 600; }
+.fail { color: var(--bad); font-weight: 600; }
+
+/* ---------- theory page ---------- */
+.eq-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .eq-row { grid-template-columns: 1fr; } }
+.eq-row .math { overflow-x: auto; padding: 8px 0; }
+pre.code {
+  margin: 0; padding: 12px; background: var(--code-bg); border-radius: 6px; overflow-x: auto;
+  font: 12.5px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.tag { display: inline-block; font-size: 12px; font-weight: 700; color: var(--accent); margin-right: 6px; }
+/* Let grid children shrink below their content width (keeps Plotly inside its card). */
+.tool > *, .plots > *, .eq-row > * { min-width: 0; }
