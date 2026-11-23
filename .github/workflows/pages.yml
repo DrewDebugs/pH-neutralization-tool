@@ -1,4 +1,8 @@
-# On every push to main: run the tests; deploy the website ONLY if they pass.
+# On every push to main:
+#   1. run the Python tests (pytest)
+#   2. build the website (_site/)
+#   3. open the built site in a real headless browser (scripts/e2e_browser_test.js)
+#   4. deploy to GitHub Pages -- only if all of the above passed
 name: test-and-deploy
 
 on:
@@ -20,14 +24,28 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
       - run: pip install -r requirements-dev.txt
       - run: pytest -q
       - run: python scripts/build_site.py
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+      - name: Browser test (real CDN, headless Chromium)
+        run: |
+          npm install --no-save playwright@1.64.1
+          npx playwright install --with-deps chromium
+          node scripts/e2e_browser_test.js _site screenshots
+      - name: Keep the screenshots (download from the run page)
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: screenshots
+          path: screenshots
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
@@ -40,4 +58,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

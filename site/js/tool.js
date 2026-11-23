@@ -380,6 +380,20 @@ async function applyPreset(name) {
   if (PRESETS[name].note) setStatus(PRESETS[name].note);
 }
 
+// Design scenarios: HCl only, or HCl plus up to 2 mM acetic acid.
+const DESIGN_NOTES = {
+  hcl: "",
+  acetic: "With acetic acid (pKa 4.76) a first stage that stops at pH 4 leaves most of the weak acid for the " +
+          "trim stage, whose demand then varies hugely: its rangeability requirement explodes. Try moving the " +
+          "intermediate set points, the bands and the trim-stage NaOH strength to find a feasible design.",
+};
+async function applyDesignScenario(name) {
+  document.querySelectorAll("[data-design]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.design === name)));
+  setInput("design.Cw_max", name === "acetic" ? 0.002 : 0);
+  $("design-note").textContent = DESIGN_NOTES[name];
+  await runDesign();
+}
+
 async function init() {
   setStatus("Loading Python in your browser (first visit downloads ~12 MB)…", true);
   DEFAULTS = await callPy("defaults", undefined, (t) => setStatus(t, true));
@@ -390,6 +404,8 @@ async function init() {
   $("run-design").addEventListener("click", runDesign);
   document.querySelectorAll("[data-preset]").forEach((b) =>
     b.addEventListener("click", () => applyPreset(b.dataset.preset)));
+  document.querySelectorAll("[data-design]").forEach((b) =>
+    b.addEventListener("click", () => applyDesignScenario(b.dataset.design)));
   window.addEventListener("themechange", redrawAll);
   await runAll();
   await runDesign();

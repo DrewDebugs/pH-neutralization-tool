@@ -1,40 +1,30 @@
-// Loads Python (Pyodide) in the browser and gives the pages one function:
-//     await callPy("simulation", params)  ->  result object
-// The Python files are the SAME files tested by pytest (copied into
-// py/phsim/ by scripts/build_site.py). No server: everything runs here.
+// The pages' only doorway to Python:
+//     const result = await callPy("simulation", params, onStatus)
+// The work happens in js/py-worker.js (a background thread running Pyodide),
+// so the page stays responsive while the model runs.
 
-const PYODIDE_VERSION = "0.29.5";   // pinned: change only on purpose
-const PYODIDE_URL = "https://cdn.jsdelivr.net/npm/pyodide@" + PYODIDE_VERSION + "/";
+const pyWorker = new Worker("js/py-worker.js");
+const pendingCalls = new Map();   // call id -> {resolve, reject}
+let nextCallId = 0;
+let statusListener = () => {};
 
-let pythonReady = null;   // one shared promise, so Python loads only once
+pyWorker.onmessage = (event) => {
+  const msg = event.data;
+  if (msg.status !== undefined) {           // progress text while Python loads
+    statusListener(msg.status);
+    return;
+  }
+  const call = pendingCalls.get(msg.id);
+  pendingCalls.delete(msg.id);
+  if (msg.error !== undefined) call.reject(new Error(msg.error));
+  else call.resolve(JSON.parse(msg.result));
+};
 
-function loadPython(onStatus) {
-  if (pythonReady) return pythonReady;
-  pythonReady = (async () => {
-    const started = performance.now();
-    onStatus("Loading Python in your browser (first visit downloads ~12 MB)…");
-    const pyodide = await loadPyodide({ indexURL: PYODIDE_URL });
-
-    // Copy our model files into Pyodide's virtual file system.
-    const files = await (await fetch("py/manifest.json")).json();
-    pyodide.FS.mkdirTree("/home/pyodide/phsim");
-    for (const name of files) {
-      const text = await (await fetch("py/phsim/" + name)).text();
-      pyodide.FS.writeFile("/home/pyodide/phsim/" + name, text);
-    }
-    pyodide.runPython("import sys; sys.path.insert(0, '/home/pyodide'); import phsim.api");
-    const seconds = ((performance.now() - started) / 1000).toFixed(1);
-    onStatus("Python ready (" + seconds + " s).");
-    return pyodide;
-  })();
-  return pythonReady;
-}
-
-// Call a function in phsim/api.py. Inputs and outputs cross the
-// JavaScript/Python boundary as JSON text, so nothing is hidden.
-async function callPy(name, params, onStatus = () => {}) {
-  const pyodide = await loadPython(onStatus);
-  const api = pyodide.pyimport("phsim.api");
-  const text = params === undefined ? api[name]() : api[name](JSON.stringify(params));
-  return JSON.parse(text);
+function callPy(name, params, onStatus) {
+  if (onStatus) statusListener = onStatus;
+  return new Promise((resolve, reject) => {
+    const id = ++nextCallId;
+    pendingCalls.set(id, { resolve, reject });
+    pyWorker.postMessage({ id, name, params: params === undefined ? undefined : JSON.stringify(params) });
+  });
 }

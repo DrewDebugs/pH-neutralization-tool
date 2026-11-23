@@ -7,7 +7,8 @@ import pytest
 from phsim.linear import (characteristic_polynomial, is_stable, kcu_vs_setpoint,
                           linearize_stage, ultimate_gain, ultimate_gain_cubic,
                           ziegler_nichols_pi)
-from phsim.simulate import Disturbance, Instruments, StageSettings, simulate
+from phsim import verify
+from phsim.simulate import Instruments
 from phsim.titration import influent_stream, process_gain, reagent_for_pH
 from conftest import CA_DEFAULT, CR_DEFAULT, F_DEFAULT, V_DEFAULT
 
@@ -55,40 +56,10 @@ def test_L4_roots_lie_on_imaginary_axis_at_ultimate_gain():
     assert pair.imag == pytest.approx(omega, rel=1e-6)
 
 
-def oscillation_growth(Kc, SP, ins, t_periods, Pu, dt=0.1):
-    """Simulate the NONLINEAR loop under P-only control after a tiny upset.
-
-    Returns (growth ratio of oscillation amplitude, measured period).
-    growth > 1 means unstable (oscillations grow).
-    """
-    inlet = influent_stream(F_DEFAULT, CA_DEFAULT)
-    stage = StageSettings(V=V_DEFAULT, CR=CR_DEFAULT, FR_max=1.0, SP=SP, Kc=Kc)
-    t_end = t_periods * Pu
-    out = simulate(F_DEFAULT, CA_DEFAULT, 0.0, [stage], ins, t_end, dt,
-                   [Disturbance(t=0.0, F=1.0001 * F_DEFAULT)])
-    t, y = np.array(out["t"]), np.array(out["pH_measured"][0])
-    early = (t > 0.3 * t_end) & (t < 0.3 * t_end + 2 * Pu)
-    late = t > t_end - 2 * Pu
-    growth = np.ptp(y[late]) / np.ptp(y[early])
-    centred = y[late] - y[late].mean()
-    crossings = t[late][1:][np.diff(np.sign(centred)) != 0]
-    period = 2 * np.mean(np.diff(crossings))
-    return growth, period
-
-
-def simulated_ultimate_gain(SP, ins, Kc_guess, Pu, t_periods=14):
-    """Bisection on Kc: smallest gain whose oscillations grow in simulation."""
-    low, high = 0.7 * Kc_guess, 1.3 * Kc_guess
-    assert oscillation_growth(low, SP, ins, t_periods, Pu)[0] < 1
-    assert oscillation_growth(high, SP, ins, t_periods, Pu)[0] > 1
-    for _ in range(9):
-        mid = 0.5 * (low + high)
-        if oscillation_growth(mid, SP, ins, t_periods, Pu)[0] < 1:
-            low = mid
-        else:
-            high = mid
-    Kc = 0.5 * (low + high)
-    return Kc, oscillation_growth(Kc, SP, ins, t_periods, Pu)[1]
+def simulated_ultimate_gain(SP, ins, Kc_guess, Pu):
+    """Default case; the bisection itself lives in phsim/verify.py."""
+    return verify.simulated_ultimate_gain(F_DEFAULT, CA_DEFAULT, CR_DEFAULT, V_DEFAULT,
+                                          SP, ins, Kc_guess, Pu)
 
 
 def test_L5_simulated_onset_of_oscillation_matches_routh():

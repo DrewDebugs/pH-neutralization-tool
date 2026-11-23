@@ -67,8 +67,29 @@ function setupCliff(tit) {
   $id("cliff-band").setAttribute("y", Y(8)); $id("cliff-band").setAttribute("height", Y(6) - Y(8));
 }
 
+// ------------------------------------------- numbers computed at build time
+function fillFacts(facts) {
+  document.querySelectorAll("[data-fact]").forEach((el) => {
+    const value = facts[el.dataset.fact];
+    if (value) el.textContent = value;
+  });
+}
+
+// Stability-limit bars (log scale), one per set point, in indicator colors.
+function drawKcuBars(bars) {
+  const svg = $id("kcu-bars");
+  const lo = Math.log10(0.001), hi = Math.log10(bars[0][1]);
+  svg.innerHTML = bars.map(([sp, kcu], i) => {
+    const w = 230 * (Math.log10(kcu) - lo) / (hi - lo), y = 18 + i * 30;
+    return `<text x="0" y="${y + 14}" class="why-lab">SP ${sp}</text>
+      <rect x="44" y="${y}" width="${w.toFixed(1)}" height="20" rx="6" fill="${phColor(sp)}" class="why-bar" style="animation-delay:${i * 0.12}s"/>
+      <text x="${(50 + w).toFixed(1)}" y="${y + 14}" class="why-val">${Number(kcu.toPrecision(2))}</text>`;
+  }).join("");
+}
+
 // ----------------------------------------------------- plant showcase
 function setupShowcase(data) {
+  const f = data.facts;
   const el = $id("showcase-plant");
   const sets = {
     single: Object.assign({}, data.single, { influent: 2.0 }),
@@ -76,8 +97,8 @@ function setupShowcase(data) {
   };
   const view = createPlantView(el, sets.single, { seconds: 16 });
   const captions = {
-    single: "One tank, set point pH 7, tuned by Ziegler–Nichols: the loop limit-cycles between pH 3.5 and 10.3. The effluent is out of spec most of the time.",
-    staged: "Two stages: 1 M caustic to pH 4, then 0.01 M caustic to pH 7. Same disturbances; the effluent stays between pH 6.3 and 7.8.",
+    single: `One tank, set point pH 7, tuned by Ziegler–Nichols: the loop limit-cycles between pH ${f.single_min} and ${f.single_max}. The effluent is out of spec most of the time.`,
+    staged: `Two stages: 1 M caustic to pH 4, then 0.01 M caustic to pH 7. Same disturbances; the effluent stays between pH ${f.staged_min} and ${f.staged_max}.`,
   };
   document.querySelectorAll("[data-show]").forEach((b) => b.addEventListener("click", () => {
     document.querySelectorAll("[data-show]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
@@ -99,10 +120,11 @@ function setupShowcase(data) {
 function countUp() {
   const els = document.querySelectorAll("[data-count]");
   const run = (el) => {
-    const target = Number(el.dataset.count), decimals = Number(el.dataset.decimals || 0);
+    const text = el.textContent.replace(/,/g, "");
+    const target = Number(text), decimals = (text.split(".")[1] || "").length;
     const t0 = performance.now(), dur = 1200;
     const step = (ts) => {
-      const f = Math.min(1, (ts - t0) / dur), e = 1 - (1 - f) ** 3;
+      const f = Math.min(1, Math.max(0, ts - t0) / dur), e = 1 - (1 - f) ** 3;
       el.textContent = (target * e).toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
       if (f < 1) requestAnimationFrame(step);
     };
@@ -116,8 +138,10 @@ function countUp() {
 }
 
 (async () => {
-  countUp();
   const data = await (await fetch("data/showcase.json")).json();
+  fillFacts(data.facts);
+  drawKcuBars(data.facts.kcu_bars);
+  countUp();
   setupBeaker(data.titration);
   setupCliff(data.titration);
   setupShowcase(data);
