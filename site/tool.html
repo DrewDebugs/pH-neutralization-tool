@@ -54,6 +54,8 @@
           </div>
           <div class="kpis" id="kpis"></div>
           <div class="plots">
+            <div class="card plot-card wide plant-card"><div class="head"><h3>Plant view</h3><span class="tagline">tank color = simulated pH · play or scrub the timeline</span></div>
+              <div id="plant-view"></div></div>
             <div class="card plot-card"><div class="head"><h3>Titration curve</h3><span class="tagline">stage 1 reagent</span></div>
               <div id="plot-titration" class="plot"></div>
               <p class="caption">Steady-state pH of influent + NaOH. Dotted line: equivalence ratio. Dot: stage 1 operating point.</p></div>
@@ -100,6 +102,8 @@
   <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pyodide@0.29.5/pyodide.js"></script>
   <script src="js/py.js"></script>
+  <script src="js/phcolor.js"></script>
+  <script src="js/plantview.js"></script>
   <script src="js/tool.js"></script>
 </body>
 </html>

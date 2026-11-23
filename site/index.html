@@ -31,6 +31,7 @@
   </header>
   <main>
     <section class="hero">
+      <svg class="ions" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><g class="ion" style="animation-delay:0s;animation-duration:9s"><circle cx="60" cy="80" r="22" fill="#ef5a2a" opacity=".16"/><text x="60" y="84" text-anchor="middle" fill="#ef5a2a" opacity=".55" font-size="12" font-weight="700">H⁺</text></g><g class="ion" style="animation-delay:-2s;animation-duration:11s"><circle cx="520" cy="60" r="18" fill="#2387cf" opacity=".16"/><text x="520" y="64" text-anchor="middle" fill="#2387cf" opacity=".55" font-size="11" font-weight="700">OH⁻</text></g><g class="ion" style="animation-delay:-4s;animation-duration:13s"><circle cx="330" cy="420" r="26" fill="#3fb34f" opacity=".16"/><text x="330" y="424" text-anchor="middle" fill="#3fb34f" opacity=".55" font-size="12" font-weight="700">H₂O</text></g><g class="ion" style="animation-delay:-1s;animation-duration:10s"><circle cx="880" cy="120" r="20" fill="#6a3a9f" opacity=".16"/><text x="880" y="124" text-anchor="middle" fill="#6a3a9f" opacity=".55" font-size="11" font-weight="700">Na⁺</text></g><g class="ion" style="animation-delay:-3s;animation-duration:12s"><circle cx="1180" cy="70" r="16" fill="#f5821f" opacity=".16"/><text x="1180" y="74" text-anchor="middle" fill="#f5821f" opacity=".55" font-size="10" font-weight="700">Cl⁻</text></g><g class="ion" style="animation-delay:-5s;animation-duration:9s"><circle cx="1320" cy="380" r="24" fill="#ef5a2a" opacity=".16"/><text x="1320" y="384" text-anchor="middle" fill="#ef5a2a" opacity=".55" font-size="12" font-weight="700">H⁺</text></g><g class="ion" style="animation-delay:-6s;animation-duration:12s"><circle cx="980" cy="470" r="18" fill="#2387cf" opacity=".16"/><text x="980" y="474" text-anchor="middle" fill="#2387cf" opacity=".55" font-size="11" font-weight="700">OH⁻</text></g><g class="ion" style="animation-delay:-7s;animation-duration:10s"><circle cx="140" cy="470" r="16" fill="#6a3a9f" opacity=".16"/><text x="140" y="474" text-anchor="middle" fill="#6a3a9f" opacity=".55" font-size="10" font-weight="700">Na⁺</text></g><g class="ion" style="animation-delay:-2s;animation-duration:14s"><circle cx="700" cy="520" r="14" fill="#f5821f" opacity=".16"/><text x="700" y="524" text-anchor="middle" fill="#f5821f" opacity=".55" font-size="10" font-weight="700">Cl⁻</text></g></svg>
       <div class="wrap">
         <div>
           <div class="eyebrow">Process Dynamics &amp; Controls · AI project</div>
@@ -38,100 +39,137 @@
           <p class="lead">This is an <strong>AI project</strong>: an AI wrote the code, and my job was to understand,
             test and defend every equation and every important line. The result is a practical tool for an engineer
             designing or troubleshooting a wastewater neutralization system. It shows <em>why</em> pH is hard to control
-            (the process gain jumps by orders of magnitude near pH 7) and <em>how</em> engineers cope: staged tanks,
-            tank sizing, reagent strength and tuning.</p>
+            and <em>how</em> engineers cope: staged tanks, tank sizing, reagent strength and tuning.</p>
+          <div class="ph-spectrum" aria-hidden="true"><span>0</span><span>7</span><span>14</span></div>
           <div class="actions">
             <a class="btn" href="tool.html">Open the tool <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
             <a class="btn ghost" href="theory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg> Equations &amp; code</a>
           </div>
         </div>
-        <figure class="hero-figure" style="margin:0">
-          <svg class="pid" viewBox="0 0 560 300" role="img" aria-labelledby="pid-title">
-  <title id="pid-title">Two-stage neutralization: acidic influent flows through two stirred tanks; each tank has a pH probe and controller that sets an NaOH valve.</title>
-  <!-- influent -->
-  <path class="pipe" d="M8 190 H72"/><path class="flow acid" d="M8 190 H72"/>
-  <text class="label" x="8" y="176">Influent</text><text class="small" x="8" y="214">HCl, pH ≈ 2</text>
-  <!-- tank 1 -->
-  <path class="vessel" d="M72 92 V232 a14 14 0 0 0 14 14 H178 a14 14 0 0 0 14 -14 V92"/>
-  <rect x="75" y="128" width="114" height="115" rx="10" style="fill:var(--acid);opacity:.22"/>
-  <line x1="166" y1="64" x2="166" y2="214" stroke="var(--text-2)" stroke-width="2"/>
-  <g class="impeller"><ellipse cx="166" cy="214" rx="22" ry="5" style="fill:var(--text-2)"/></g>
-  <text class="label" x="116" y="178" text-anchor="middle">Stage 1</text>
-  <text class="small" x="116" y="194" text-anchor="middle">SP pH 4</text>
-  <!-- NaOH to tank 1 -->
-  <path class="pipe" d="M100 18 V92" style="stroke-width:4"/><path class="flow base" d="M100 18 V92"/>
-  <path class="valve" d="M92 40 L108 52 V40 L92 52 Z"/>
-  <text class="small" x="62" y="22">NaOH</text>
-  <!-- loop 1 -->
-  <circle class="bubble" cx="222" cy="150" r="14"/><text class="bubble-text" x="222" y="153.5" text-anchor="middle">AT</text>
-  <path class="signal" d="M192 150 H208"/>
-  <circle class="bubble" cx="222" cy="46" r="14"/><text class="bubble-text" x="222" y="49.5" text-anchor="middle">AIC</text>
-  <path class="signal" d="M222 136 V60 M208 46 H108"/>
-  <!-- pipe to tank 2 -->
-  <path class="pipe" d="M192 226 H300"/><path class="flow base" d="M192 226 H300" style="stroke:var(--accent)"/>
-  <!-- tank 2 -->
-  <path class="vessel" d="M300 92 V232 a14 14 0 0 0 14 14 H406 a14 14 0 0 0 14 -14 V92"/>
-  <rect x="303" y="128" width="114" height="115" rx="10" style="fill:var(--neutral);opacity:.22"/>
-  <line x1="394" y1="64" x2="394" y2="214" stroke="var(--text-2)" stroke-width="2"/>
-  <g class="impeller" style="animation-delay:-0.4s"><ellipse cx="394" cy="214" rx="22" ry="5" style="fill:var(--text-2)"/></g>
-  <text class="label" x="344" y="178" text-anchor="middle">Stage 2</text>
-  <text class="small" x="344" y="194" text-anchor="middle">SP pH 7</text>
-  <!-- dilute NaOH to tank 2 -->
-  <path class="pipe" d="M328 18 V92" style="stroke-width:4"/><path class="flow base" d="M328 18 V92"/>
-  <path class="valve" d="M320 40 L336 52 V40 L320 52 Z"/>
-  <text class="small" x="266" y="22">dilute NaOH</text>
-  <!-- loop 2 -->
-  <circle class="bubble" cx="450" cy="150" r="14"/><text class="bubble-text" x="450" y="153.5" text-anchor="middle">AT</text>
-  <path class="signal" d="M420 150 H436"/>
-  <circle class="bubble" cx="450" cy="46" r="14"/><text class="bubble-text" x="450" y="49.5" text-anchor="middle">AIC</text>
-  <path class="signal" d="M450 136 V60 M436 46 H336"/>
-  <!-- effluent -->
-  <path class="pipe" d="M420 226 H552"/><path class="flow neutral" d="M420 226 H552"/>
-  <text class="label" x="478" y="212">Effluent</text><text class="small" x="478" y="250">pH 6–9</text>
-  <text class="small" x="8" y="290">AT = pH probe (analyzer)   ·   AIC = PI controller   ·   ⋈ = reagent valve</text>
+        <div class="lab card">
+          <div class="lab-head"><span class="eyebrow" style="margin:0">Try it</span><span class="muted">0.01 M HCl + 1 M NaOH, from the model</span></div>
+          <div class="lab-body">
+            <svg class="bk-svg" viewBox="0 0 300 290" role="img" aria-label="Beaker whose color shows the pH">
+  <defs>
+    <linearGradient id="bk-scale" x1="0" y1="260" x2="0" y2="40" gradientUnits="userSpaceOnUse"><stop offset="0.000" stop-color="#c81d3a"/><stop offset="0.143" stop-color="#ef5a2a"/><stop offset="0.214" stop-color="#f5821f"/><stop offset="0.286" stop-color="#f9a81c"/><stop offset="0.357" stop-color="#f2cc1b"/><stop offset="0.429" stop-color="#b7cf2f"/><stop offset="0.500" stop-color="#3fb34f"/><stop offset="0.571" stop-color="#17a38f"/><stop offset="0.643" stop-color="#2387cf"/><stop offset="0.714" stop-color="#3560c2"/><stop offset="0.857" stop-color="#6a3a9f"/><stop offset="1.000" stop-color="#4a2775"/></linearGradient>
+    <clipPath id="bk-clip"><path d="M63 74 V248 a14 14 0 0 0 14 14 H203 a14 14 0 0 0 14 -14 V74Z"/></clipPath>
+  </defs>
+  <!-- dropper -->
+  <rect x="139" y="0" width="22" height="22" rx="10" class="bk-bulb"/>
+  <path d="M143 20 h14 l-4 18 h-6z" class="bk-glass"/>
+  <g id="bk-drops"></g>
+  <!-- liquid -->
+  <g clip-path="url(#bk-clip)">
+    <rect id="bk-liq" x="60" y="132" width="160" height="140" fill="#ef5a2a"/>
+    <path id="bk-wave" class="bk-wave" fill="#ef5a2a" d="M0 132 q10 -5 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 V300 H0Z"/>
+    <circle class="bk-bub" cx="96" cy="250" r="3"/><circle class="bk-bub" cx="140" cy="250" r="2" style="animation-delay:-1s"/>
+    <circle class="bk-bub" cx="180" cy="250" r="3" style="animation-delay:-2s"/>
+  </g>
+  <path d="M56 66 H64 V248 a14 14 0 0 0 14 14 H202 a14 14 0 0 0 14 -14 V66 H224" class="bk-outline"/>
+  <g class="bk-grad"><path d="M64 110 h12 M64 150 h18 M64 190 h12 M64 230 h18"/></g>
+  <!-- pH scale -->
+  <rect x="256" y="40" width="14" height="220" rx="7" fill="url(#bk-scale)"/>
+  <text x="283" y="45" class="bk-tick">14</text><text x="283" y="154" class="bk-tick">7</text><text x="283" y="263" class="bk-tick">0</text>
+  <g id="bk-marker"><path d="M240 34 l12 6 l-12 6z" class="bk-mark"/></g>
 </svg>
-          <figcaption>A two-stage design, as simulated by the tool: coarse neutralization to pH 4, then a trim stage to pH 7 with dilute caustic.</figcaption>
-        </figure>
+            <div class="lab-read">
+              <div class="bk-label">pH</div>
+              <div class="bk-ph" id="bk-ph">2.00</div>
+              <dl>
+                <dt>[H⁺]</dt><dd id="bk-h">—</dd>
+                <dt>gain d(pH)/dF<sub>R</sub></dt><dd><span id="bk-gain">—</span> <span class="muted">pH per m³/h</span></dd>
+              </dl>
+              <svg class="bk-curve" viewBox="0 0 300 150" aria-hidden="true">
+  <defs><linearGradient id="bk-cg" x1="0" y1="140" x2="0" y2="10" gradientUnits="userSpaceOnUse"><stop offset="0.000" stop-color="#c81d3a"/><stop offset="0.143" stop-color="#ef5a2a"/><stop offset="0.214" stop-color="#f5821f"/><stop offset="0.286" stop-color="#f9a81c"/><stop offset="0.357" stop-color="#f2cc1b"/><stop offset="0.429" stop-color="#b7cf2f"/><stop offset="0.500" stop-color="#3fb34f"/><stop offset="0.571" stop-color="#17a38f"/><stop offset="0.643" stop-color="#2387cf"/><stop offset="0.714" stop-color="#3560c2"/><stop offset="0.857" stop-color="#6a3a9f"/><stop offset="1.000" stop-color="#4a2775"/></linearGradient></defs>
+  <line x1="10" x2="290" y1="140" y2="140" class="bk-axis"/><line x1="10" x2="10" y1="10" y2="140" class="bk-axis"/>
+  <line id="bk-eq" y1="10" y2="140" class="bk-eqline"/>
+  <path id="bk-curve" fill="none" stroke="url(#bk-cg)" stroke-width="3" stroke-linecap="round"/>
+  <circle id="bk-dot" r="7" stroke="var(--surface)" stroke-width="2.5"/>
+  <text x="14" y="20" class="bk-tick">pH</text><text x="288" y="134" text-anchor="end" class="bk-tick">caustic added →</text>
+</svg>
+            </div>
+          </div>
+          <label class="bk-control"><span>Caustic added: <strong id="bk-pct">0%</strong> of equivalence</span>
+            <input type="range" id="bk-slider" min="0" max="200" value="0" step="1"></label>
+          <p class="bk-msg" id="bk-msg"></p>
+        </div>
       </div>
     </section>
 
     <section class="wrap stats" style="margin-top:28px">
       <div class="grid-4">
-        <div class="card stat"><div class="value">5,000×</div><div class="label">rise in process gain d(pH)/d(F<sub>R</sub>) from pH 3 to pH 7, while reagent flow changes by only 10 %</div></div>
-        <div class="card stat"><div class="value">0.06<span class="unit">%</span></div><div class="label">gap between the Routh–Hurwitz stability limit and the full nonlinear simulation</div></div>
-        <div class="card stat"><div class="value">71</div><div class="label">automated pytest checks against hand calculations, scipy and numpy</div></div>
-        <div class="card stat"><div class="value">0</div><div class="label">servers: the tested Python model runs in your browser via WebAssembly</div></div>
+        <div class="card stat"><div class="stat-icon" style="--c:#ef5a2a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20c5 0 6-2 7-6s1-8 3-8 3 4 4 6 2 2 4 2"/><path d="M3 3v18h18"/></svg></div><div class="value"><span data-count="5000">5,000</span>×</div><div class="label">rise in process gain from pH 3 to pH 7, while the reagent flow changes by only 10 %</div></div>
+        <div class="card stat"><div class="stat-icon" style="--c:#3fb34f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><div class="value"><span data-count="0.06" data-decimals="2">0.06</span><span class="unit">%</span></div><div class="label">gap between the Routh–Hurwitz limit and the full nonlinear simulation</div></div>
+        <div class="card stat"><div class="stat-icon" style="--c:#2387cf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7 15h10"/></svg></div><div class="value"><span data-count="71">71</span></div><div class="label">automated checks against hand calculations, scipy and numpy</div></div>
+        <div class="card stat"><div class="stat-icon" style="--c:#6a3a9f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><div class="value">0</div><div class="label">servers: the tested Python model runs in your browser</div></div>
       </div>
     </section>
 
     <section class="wrap">
-      <h2>What the tool does</h2>
+      <div class="section-head"><div class="eyebrow">The problem</div><h2>Three reasons pH control is hard</h2></div>
       <div class="grid-3">
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7 15h10"/></svg></div><h3>Equilibrium from a charge balance</h3>
-          <p>HCl, optional acetic acid and NaOH at 25 °C. pH is found by bisection on a function that always has exactly one root.</p></div>
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20c5 0 6-2 7-6s1-8 3-8 3 4 4 6 2 2 4 2"/><path d="M3 3v18h18"/></svg></div><h3>Titration curve &amp; process gain</h3>
-          <p>See the steep cliff at equivalence and the gain d(pH)/d(reagent) on a log scale, with buffering by a weak acid.</p></div>
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="7" height="13" rx="1.5"/><rect x="14" y="6" width="7" height="13" rx="1.5"/><path d="M10 15h4M6.5 3v3M17.5 3v3"/></svg></div><h3>1–3 stirred tanks in series</h3>
+        <div class="card why"><div class="why-num" style="--c:#ef5a2a">1</div><h3>The cliff</h3><svg class="why-svg" id="cliff-svg" viewBox="0 0 320 170" role="img" aria-label="Zoom on the titration curve near equivalence"><rect id="cliff-band" x="12" width="296" class="why-band"/><path id="cliff-path" fill="none" class="why-curve"/><text x="300" y="54" text-anchor="end" class="why-lab">pH 8</text><text x="300" y="96" text-anchor="end" class="why-lab">pH 6</text><text x="16" y="164" class="why-lab">−10 % caustic</text><text x="304" y="164" text-anchor="end" class="why-lab">+10 %</text></svg>
+          <p>Near equivalence the titration curve is almost vertical. Going from pH 6 to pH 8 takes only
+            <strong>0.072 L/h</strong> more caustic: <strong>0.02 %</strong> of the 360 L/h flow.</p></div>
+        <div class="card why"><div class="why-num" style="--c:#3fb34f">2</div><h3>A trickle moves it a whole unit</h3><svg class="why-svg" viewBox="0 0 320 170" role="img" aria-label="A trickle of caustic moves pH 7 to pH 8"><path d="M14 40 V128 a10 10 0 0 0 10 10 H84 a10 10 0 0 0 10 -10 V40" class="bk-outline"/><rect x="16" y="76" width="76" height="60" rx="8" fill="#3fb34f"/><text x="54" y="114" text-anchor="middle" class="why-ph">pH 7</text><path d="M226 40 V128 a10 10 0 0 0 10 10 H296 a10 10 0 0 0 10 -10 V40" class="bk-outline"/><rect x="228" y="76" width="76" height="60" rx="8" fill="#17a38f"/><text x="266" y="114" text-anchor="middle" class="why-ph">pH 8</text><path d="M120 92 H200" class="why-arrow"/><path d="M196 86 l8 6 l-8 6" class="why-arrow"/><rect x="150" y="18" width="18" height="18" rx="8" class="bk-bulb"/><path d="M153 34 h12 l-3 14 h-6z" class="bk-glass"/><path class="why-drop" d="M159 54 q-5 8 0 11 q5 -3 0 -11z"/><text x="160" y="124" text-anchor="middle" class="why-big">+17 mL/h</text><text x="160" y="142" text-anchor="middle" class="why-lab">of 1 M NaOH</text></svg>
+          <p>At pH 7 the process gain is about <strong>60,000 pH per m³/h</strong>, so roughly 17 mL/h of caustic
+            shifts the steady-state pH by one unit. No valve meters reagent that finely across its whole range.</p></div>
+        <div class="card why"><div class="why-num" style="--c:#2387cf">3</div><h3>The stable window collapses</h3><svg class="why-svg" viewBox="0 0 320 170" role="img" aria-label="Bar chart: stability limit Kc,u at set points 3 to 7, log scale"><text x="0" y="32" class="why-lab">SP 3</text><rect x="44" y="18" width="230.0" height="20" rx="6" fill="#f5821f" class="why-bar" style="animation-delay:0.0s"/><text x="280.0" y="32" class="why-val">22.5</text><text x="0" y="62" class="why-lab">SP 4</text><rect x="44" y="48" width="177.3" height="20" rx="6" fill="#f9a81c" class="why-bar" style="animation-delay:0.12s"/><text x="227.3" y="62" class="why-val">2.26</text><text x="0" y="92" class="why-lab">SP 5</text><rect x="44" y="78" width="124.4" height="20" rx="6" fill="#f2cc1b" class="why-bar" style="animation-delay:0.24s"/><text x="174.4" y="92" class="why-val">0.226</text><text x="0" y="122" class="why-lab">SP 6</text><rect x="44" y="108" width="71.8" height="20" rx="6" fill="#b7cf2f" class="why-bar" style="animation-delay:0.36s"/><text x="121.8" y="122" class="why-val">0.023</text><text x="0" y="152" class="why-lab">SP 7</text><rect x="44" y="138" width="34.5" height="20" rx="6" fill="#3fb34f" class="why-bar" style="animation-delay:0.48s"/><text x="84.5" y="152" class="why-val">0.0045</text></svg>
+          <p>Routh–Hurwitz: the largest stable controller gain K<sub>c,u</sub> [(m³/h)/pH] falls
+            <strong>5,000×</strong> from set point 3 to 7 (log-scale bars). A tuning that is safe at pH 4 is violently unstable at pH 7.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="section-head"><div class="eyebrow">See it happen</div><h2>One tank vs. two stages</h2>
+        <p class="lead" style="font-size:1rem">Both runs use the same disturbances (more acid at 5 min, less flow at 30 min).
+          The tank color is the simulated pH; the strip below is the final tank's pH over time, with the 6–9 discharge band shaded.</p></div>
+      <div class="card showcase">
+        <div class="seg" role="group" aria-label="Design">
+          <button type="button" data-show="single" aria-pressed="true">One tank at pH 7</button>
+          <button type="button" data-show="staged" aria-pressed="false">Two stages: pH 4 → 7</button>
+        </div>
+        <div id="showcase-plant"></div>
+        <p class="caption" id="showcase-caption"></p>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <div class="section-head"><div class="eyebrow">Inside the tool</div><h2>What you can do with it</h2></div>
+      <div class="grid-3">
+        <div class="card feature"><div class="icon" style="--c:#ef5a2a"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7 15h10"/></svg></div><h3>Equilibrium from a charge balance</h3>
+          <p>HCl, optional acetic acid and NaOH at 25 °C. pH by bisection on a function that always has exactly one root.</p></div>
+        <div class="card feature"><div class="icon" style="--c:#f5821f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20c5 0 6-2 7-6s1-8 3-8 3 4 4 6 2 2 4 2"/><path d="M3 3v18h18"/></svg></div><h3>Titration curve &amp; process gain</h3>
+          <p>See the cliff at equivalence and the gain d(pH)/d(reagent) on a log scale, with buffering by a weak acid.</p></div>
+        <div class="card feature"><div class="icon" style="--c:#b7a800"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="7" height="13" rx="1.5"/><rect x="14" y="6" width="7" height="13" rx="1.5"/><path d="M10 15h4M6.5 3v3M17.5 3v3"/></svg></div><h3>1–3 stirred tanks in series</h3>
           <p>Each stage has its own NaOH valve and PI loop, with valve limits, anti-windup, probe lag and dead time.</p></div>
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><h3>Disturbance response</h3>
-          <p>Step the influent flow or acid strength and watch the true and measured pH, and the valve hit its limits.</p></div>
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Routh–Hurwitz stability</h3>
+        <div class="card feature"><div class="icon" style="--c:#3fb34f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><h3>Animated disturbance response</h3>
+          <p>Step the influent flow or acid strength and watch the tanks change color, the valves saturate and the probe lag behind.</p></div>
+        <div class="card feature"><div class="icon" style="--c:#2387cf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Routh–Hurwitz stability</h3>
           <p>Linearize, get G<sub>p</sub>(s) = K<sub>p</sub>/(τs + 1), and see the stable K<sub>c</sub> range collapse near pH 7.</p></div>
-        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><h3>Staging design helper</h3>
+        <div class="card feature"><div class="icon" style="--c:#6a3a9f"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><h3>Staging design helper</h3>
           <p>Compare 1-, 2- and 3-stage designs by the valve rangeability and resolution each stage actually needs.</p></div>
       </div>
     </section>
 
     <section class="wrap">
-      <h2>How it works</h2>
+      <div class="section-head"><div class="eyebrow">Under the hood</div><h2>How it works</h2></div>
       <div class="steps">
-        <div class="card step"><h3>Track what reactions can't change</h3><p>Total chloride, sodium and acetate are balanced like a mixing problem. No reaction terms, no stiffness.</p></div>
-        <div class="card step"><h3>Solve for pH algebraically</h3><p>Electroneutrality turns the three totals into a pH at every time step.</p></div>
-        <div class="card step"><h3>Linearize and apply Routh</h3><p>The tank gain is the titration slope, so the stability limit is (lags) ÷ (chemistry).</p></div>
-        <div class="card step"><h3>Design around it</h3><p>Stage the neutralization so each valve works on a part of the curve it can actually control.</p></div>
+        <div class="card step" style="--c:#ef5a2a"><h3>Track what reactions can't change</h3><p>Total chloride, sodium and acetate are balanced like a mixing problem. No reaction terms, no stiffness.</p></div>
+        <div class="card step" style="--c:#f2cc1b"><h3>Solve for pH algebraically</h3><p>Electroneutrality turns the three totals into a pH at every time step.</p></div>
+        <div class="card step" style="--c:#3fb34f"><h3>Linearize and apply Routh</h3><p>The tank gain is the titration slope, so the stability limit is (lags) ÷ (chemistry).</p></div>
+        <div class="card step" style="--c:#2387cf"><h3>Design around it</h3><p>Stage the neutralization so each valve works on a part of the curve it can actually control.</p></div>
       </div>
-      <div class="note" style="margin-top:24px">Everything you see is computed by the same Python file that the automated tests check.
-        <a href="theory.html">The Theory page</a> shows each equation next to the exact code that implements it.</div>
+    </section>
+
+    <section class="wrap">
+      <div class="cta">
+        <div>
+          <h2>Ready to break a control loop?</h2>
+          <p>Start with one tank at pH 7, watch it limit-cycle, then fix it with staging and tuning.</p>
+        </div>
+        <a class="btn light" href="tool.html">Open the tool <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </section>
   </main>
   <footer class="site">
@@ -140,5 +178,8 @@
       <span><a href="https://github.com/DrewDebugs/pH-neutralization-tool">Source on GitHub</a> · Runs entirely in your browser</span>
     </div>
   </footer>
+  <script src="js/phcolor.js"></script>
+  <script src="js/plantview.js"></script>
+  <script src="js/home.js"></script>
 </body>
 </html>

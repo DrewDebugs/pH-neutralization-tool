@@ -36,6 +36,43 @@
       <h1>Every equation, next to its code</h1>
       <p class="lead">The code beside each equation is read from the running model with Python's <code>inspect.getsource()</code>, so it is exactly the code that produced the plots, not a copy that could go out of date.</p>
     </section>
+    <section class="wrap" style="margin-bottom:16px">
+      <div class="card loop-card">
+        <div class="eyebrow">The control loop, one stage</div>
+        <svg class="loop-svg" viewBox="0 0 900 230" role="img" aria-label="Block diagram: set point, PI controller, valve, tank, disturbance, probe with dead time feeding back">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" class="lp-head"/></marker></defs>
+          <text x="14" y="104" class="lp-sig">SP</text>
+          <path d="M40 100 H94" class="lp-wire" marker-end="url(#ah)"/>
+          <circle cx="110" cy="100" r="14" class="lp-sum"/><text x="110" y="105" text-anchor="middle" class="lp-sym">Σ</text>
+          <text x="82" y="90" class="lp-sign">+</text><text x="118" y="134" class="lp-sign">−</text>
+          <path d="M124 100 H168" class="lp-wire" marker-end="url(#ah)"/><text x="140" y="92" class="lp-sig">e</text>
+          <rect x="170" y="66" width="150" height="68" rx="12" class="lp-block" style="--c:#f5821f"/>
+          <text x="245" y="92" text-anchor="middle" class="lp-title">PI controller</text>
+          <text x="245" y="116" text-anchor="middle" class="lp-math">Kc (1 + 1/τI s)</text>
+          <path d="M320 100 H358" class="lp-wire" marker-end="url(#ah)"/><text x="332" y="92" class="lp-sig">u</text>
+          <rect x="360" y="66" width="130" height="68" rx="12" class="lp-block" style="--c:#f2cc1b"/>
+          <text x="425" y="92" text-anchor="middle" class="lp-title">NaOH valve</text>
+          <text x="425" y="116" text-anchor="middle" class="lp-math">1 / (τv s + 1)</text>
+          <path d="M490 100 H528" class="lp-wire" marker-end="url(#ah)"/><text x="500" y="92" class="lp-sig">FR</text>
+          <rect x="530" y="66" width="140" height="68" rx="12" class="lp-block" style="--c:#3fb34f"/>
+          <text x="600" y="92" text-anchor="middle" class="lp-title">Tank</text>
+          <text x="600" y="116" text-anchor="middle" class="lp-math">Kp / (τ s + 1)</text>
+          <path d="M670 100 H714" class="lp-wire" marker-end="url(#ah)"/>
+          <circle cx="730" cy="100" r="14" class="lp-sum"/><text x="730" y="105" text-anchor="middle" class="lp-sym">Σ</text>
+          <rect x="680" y="4" width="100" height="44" rx="10" class="lp-block" style="--c:#ef5a2a"/>
+          <text x="730" y="31" text-anchor="middle" class="lp-math">Gd(s)</text>
+          <text x="790" y="30" class="lp-sig">disturbance</text>
+          <path d="M730 48 V84" class="lp-wire" marker-end="url(#ah)"/>
+          <path d="M744 100 H884" class="lp-wire" marker-end="url(#ah)"/><text x="846" y="92" class="lp-sig">pH</text>
+          <path d="M810 100 V190 H594" class="lp-wire" marker-end="url(#ah)"/>
+          <rect x="410" y="160" width="182" height="60" rx="12" class="lp-block" style="--c:#2387cf"/>
+          <text x="501" y="184" text-anchor="middle" class="lp-title">pH probe + dead time</text>
+          <text x="501" y="206" text-anchor="middle" class="lp-math">e^(−θs) / (τm s + 1)</text>
+          <path d="M410 190 H110 V118" class="lp-wire" marker-end="url(#ah)"/><text x="196" y="182" class="lp-sig">measured pH</text>
+        </svg>
+        <p class="caption">Only the tank block depends on the chemistry: its gain K<sub>p</sub> is the slope of the titration curve and changes by orders of magnitude with the set point. Every other block is a fixed lag.</p>
+      </div>
+    </section>
     <section class="wrap">
       <div class="callouts">
         <div class="card"><div class="eyebrow">State variables</div><h3>Reaction invariants</h3>

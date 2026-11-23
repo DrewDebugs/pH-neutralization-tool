@@ -4,6 +4,7 @@
 
 let DEFAULTS = null;
 let LAST = null;          // last results, so plots can be redrawn on theme change
+let PLANT = null;         // the animated plant view
 const $ = (id) => document.getElementById(id);
 
 function setStatus(text, busy = false) {
@@ -182,7 +183,12 @@ function drawTitration(r, st, params) {
     { x: [opRatio], y: [s1.SP], mode: "markers", name: "stage 1 set point",
       marker: { size: 11, color: seriesColor(1), line: { width: 2, color: css("--surface") } },
       hovertemplate: "Operating point<br>F<sub>R</sub>/F = %{x:.5f}, pH %{y:.2f}<extra></extra>" },
-  ], layout("reagent-to-influent ratio  F<sub>R</sub> / F", "pH", { yaxis: { range: [0, 14.2] } }), CONFIG);
+  ], layout("reagent-to-influent ratio  F<sub>R</sub> / F", "pH", {
+    yaxis: { range: [0, 14] },
+    // faint universal-indicator bands, one per pH unit (decoration only)
+    shapes: [...Array(14).keys()].map((p) => ({ type: "rect", xref: "paper", x0: 0, x1: 1, y0: p, y1: p + 1,
+      fillcolor: phColor(p + 0.5, 0.09), line: { width: 0 }, layer: "below" })),
+  }), CONFIG);
 
   Plotly.react("plot-gain", [
     { x: r.gain_pH, y: r.gain, mode: "lines", name: "gain", line: { color: seriesColor(0), width: 2.5 },
@@ -319,6 +325,12 @@ async function runAll() {
     const simulation = await callPy("simulation", params, say);
     LAST = { params, titration, stability, simulation };
     redrawAll();
+    const plantData = Object.assign({}, simulation, {
+      FR_max: params.stages.slice(0, simulation.pH.length).map((st) => st.FR_max),
+      disturbances: params.disturbances, influent: titration.pH[0] });
+    if (!PLANT) PLANT = createPlantView($("plant-view"), plantData, { seconds: 16 });
+    else PLANT.setData(plantData);
+    PLANT.play();
     drawKpis(stability, simulation, params);
     setStatus(`Done in ${((performance.now() - t0) / 1000).toFixed(1)} s`);
   } catch (err) {
