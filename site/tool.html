@@ -4,72 +4,99 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tool · pH Neutralization Tool</title>
+  <meta name="description" content="Interactive design and simulation tool for wastewater pH neutralization: titration curves, process gain, staged tanks, PI control and Routh-Hurwitz stability.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' aria-hidden='true'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23eb6834'/%3E%3Cstop offset='.55' stop-color='%232a78d6'/%3E%3Cstop offset='1' stop-color='%231baf7a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2.5C16 2.5 5.5 14 5.5 20.5a10.5 10.5 0 0 0 21 0C26.5 14 16 2.5 16 2.5z' fill='url(%23lg)'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-size='9.5' font-weight='800' fill='%23fff'%3EpH%3C/text%3E%3C/svg%3E">
+  <script src="js/theme.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="site"><div class="inner">
-    <a class="brand" href="index.html">pH Neutralization Tool</a>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="tool.html" aria-current="page">Tool</a>
-      <a href="theory.html">Theory</a>
-      <a href="ai-process.html">AI Process</a>
-      <a href="model-comparison.html">Model Comparison</a>
-      <a href="video.html">Video & Transcript</a>
-      <a href="learned.html">What I Learned</a>
-      <a href="references.html">References</a>
-    </nav>
-  </div></header>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eb6834"/><stop offset=".55" stop-color="#2a78d6"/><stop offset="1" stop-color="#1baf7a"/></linearGradient></defs><path d="M16 2.5C16 2.5 5.5 14 5.5 20.5a10.5 10.5 0 0 0 21 0C26.5 14 16 2.5 16 2.5z" fill="url(#lg)"/><text x="16" y="24" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="800" fill="#fff">pH</text></svg><span>pH Neutralization Tool<small>Process Dynamics &amp; Controls</small></span></a>
+      <nav aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="tool.html" aria-current="page">Tool</a>
+        <a href="theory.html">Theory</a>
+        <a href="ai-process.html">AI Process</a>
+        <a href="model-comparison.html">Model Comparison</a>
+        <a href="video.html">Video</a>
+        <a href="learned.html">What I Learned</a>
+        <a href="references.html">References</a>
+      </nav>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle theme"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+    </div>
+  </header>
   <main>
-    <h1>Neutralization design &amp; control tool</h1>
-    <p class="lead">Change any input and press <strong>Run</strong>. Default case: 0.01 M HCl at 36 m³/h
-      neutralized to pH 7 with 1 M NaOH in one 10 m³ tank — watch how badly a single stage behaves,
-      then try 2 stages (stage 1 SP 4 with 1 M NaOH, stage 2 SP 7 with 0.01 M NaOH) and <strong>Auto-tune</strong>.</p>
-    <p id="status">Starting…</p>
-    <div class="tool">
-      <form id="inputs" onsubmit="return false"></form>
-      <div>
-        <div class="actions">
-          <button id="run" type="button">Run</button>
-          <button id="autotune" type="button" class="secondary">Auto-tune (Ziegler–Nichols from Routh)</button>
-        </div>
-        <div class="plots">
-          <div class="card plot-card"><h3>Titration curve (stage 1 reagent)</h3>
-            <div id="plot-titration" class="plot"></div>
-            <p>pH of influent + NaOH at steady state. The dotted line is the equivalence ratio.</p></div>
-          <div class="card plot-card"><h3>Process gain vs pH</h3>
-            <div id="plot-gain" class="plot"></div>
-            <p>Slope of the titration curve (log scale). This is K<sub>p</sub> of the linearized tank.</p></div>
-          <div class="card plot-card"><h3>Closed-loop response</h3>
-            <div id="plot-response" class="plot"></div>
-            <p>Solid: true tank pH. Dotted: what the probe reads. Dashed: set point.</p></div>
-          <div class="card plot-card"><h3>Reagent flow</h3>
-            <div id="plot-flow" class="plot"></div>
-            <p>Valve flow per stage; dotted line = valve maximum.</p></div>
-          <div class="card plot-card"><h3>Stable Kc range vs set point (stage 1, P-only)</h3>
-            <div id="plot-kcu" class="plot"></div>
-            <p>Routh–Hurwitz: 0 &lt; K<sub>c</sub> &lt; K<sub>c,u</sub> is stable for the linearized loop.</p></div>
-          <div class="card plot-card"><h3>Linear analysis of each stage</h3>
-            <div id="stage-analysis" class="scroll-x"></div>
-            <p>Linearized at each stage's set point with nominal influent.
-              "Current tuning" applies Routh to the PI loop with the gains you entered.</p></div>
+    <section class="page-head wrap">
+      <div class="eyebrow">Design &amp; simulation</div>
+      <h1>Neutralization design &amp; control tool</h1>
+      <p class="lead">Pick a scenario or change any input, then press <strong>Run</strong>. Start with the default single tank at pH 7 to see how hard it is, then try the staged design.</p>
+    </section>
+    <section class="wrap">
+      <div class="presets" role="group" aria-label="Scenarios">
+        <span class="label">Scenarios:</span>
+        <button class="chip" type="button" data-preset="single" aria-pressed="true">1 tank at pH 7 (the hard case)</button>
+        <button class="chip" type="button" data-preset="staged">2 stages + auto-tune</button>
+        <button class="chip" type="button" data-preset="buffered">Acetic acid buffering</button>
+        <button class="chip" type="button" data-preset="deadtime">10 s dead time</button>
+        <button class="chip" type="button" data-preset="windup">Valve saturation &amp; windup</button>
+      </div>
+      <div class="tool">
+        <form id="inputs" class="panel" onsubmit="return false"></form>
+        <div>
+          <div class="runbar">
+            <button id="run" class="btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l13 8-13 8z"/></svg> Run</button>
+            <button id="autotune" class="btn ghost" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 4V2M15 10V8M11 6h2M17 6h2M4 20L14 10"/></svg> Auto-tune (Ziegler–Nichols)</button>
+            <div id="status" role="status" aria-live="polite"><span class="spinner"></span><span id="status-text">Starting…</span></div>
+          </div>
+          <div class="kpis" id="kpis"></div>
+          <div class="plots">
+            <div class="card plot-card"><div class="head"><h3>Titration curve</h3><span class="tagline">stage 1 reagent</span></div>
+              <div id="plot-titration" class="plot"></div>
+              <p class="caption">Steady-state pH of influent + NaOH. Dotted line: equivalence ratio. Dot: stage 1 operating point.</p></div>
+            <div class="card plot-card"><div class="head"><h3>Process gain vs pH</h3><span class="tagline">log scale</span></div>
+              <div id="plot-gain" class="plot"></div>
+              <p class="caption">Slope of the titration curve, which is K<sub>p</sub> of the linearized tank.</p></div>
+            <div class="card plot-card wide"><div class="head"><h3>Closed-loop pH</h3><span class="tagline">solid true · dotted measured · dashed SP</span></div>
+              <div id="plot-response" class="plot tall"></div>
+              <p class="caption">Response to the disturbance steps on the left. Vertical lines mark each step.</p></div>
+            <div class="card plot-card"><div class="head"><h3>Reagent flow</h3><span class="tagline">dotted = valve maximum</span></div>
+              <div id="plot-flow" class="plot"></div>
+              <p class="caption">Delivered NaOH flow per stage. Flat at the dotted line means the valve is saturated.</p></div>
+            <div class="card plot-card"><div class="head"><h3>Stable K<sub>c</sub> range vs set point</h3><span class="tagline">stage 1, P-only</span></div>
+              <div id="plot-kcu" class="plot"></div>
+              <p class="caption">Routh–Hurwitz: the shaded region 0 &lt; K<sub>c</sub> &lt; K<sub>c,u</sub> is stable for the linearized loop.</p></div>
+            <div class="card plot-card wide"><div class="head"><h3>Linear analysis of each stage</h3><span class="tagline">at each set point</span></div>
+              <div id="stage-analysis" class="scroll-x"></div>
+              <p class="caption">"Your tuning" applies Routh to the PI loop with the gains entered on the left.</p></div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <h2>Design helper: 1 vs 2 vs 3 stages</h2>
-    <p class="muted">For each stage, over the whole influent range: how far must the reagent valve turn
-      down (rangeability), and how precisely must it deliver flow to keep the outlet inside the band
-      (resolution, % of valve maximum)? Everything is computed from the model; the valve capability
-      numbers are your inputs, not literature values.</p>
-    <div class="tool">
-      <form id="design-inputs" onsubmit="return false"></form>
-      <div>
-        <div class="actions"><button id="run-design" type="button">Compare designs</button></div>
-        <div id="design-results"></div>
+    <section class="wrap">
+      <h2>Design helper: 1 vs 2 vs 3 stages</h2>
+      <p class="lead" style="font-size:1rem">For each stage, over the whole influent range: how far must the reagent valve turn
+        down (<strong>rangeability</strong>), and how precisely must it deliver flow to keep the outlet inside its band
+        (<strong>resolution</strong>, % of valve maximum)? Everything is computed from the model; the valve capability is your input, not a literature value.</p>
+      <div class="tool">
+        <form id="design-inputs" class="panel" onsubmit="return false"></form>
+        <div>
+          <div class="runbar"><button id="run-design" class="btn" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18M16 3v18M3 8h5M16 16h5M3 16h5M16 8h5"/></svg> Compare designs</button></div>
+          <div id="design-results" class="designs"></div>
+        </div>
       </div>
-    </div>
+    </section>
   </main>
+  <footer class="site">
+    <div class="wrap">
+      <span>Course project · Process Dynamics &amp; Controls · Code written by AI, checked by 71 automated tests.</span>
+      <span><a href="https://github.com/DrewDebugs/pH-neutralization-tool">Source on GitHub</a> · Runs entirely in your browser</span>
+    </div>
+  </footer>
   <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pyodide@0.29.5/pyodide.js"></script>
   <script src="js/py.js"></script>

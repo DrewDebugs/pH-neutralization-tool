@@ -4,44 +4,141 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Home · pH Neutralization Tool</title>
+  <meta name="description" content="Interactive design and simulation tool for wastewater pH neutralization: titration curves, process gain, staged tanks, PI control and Routh-Hurwitz stability.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 32 32' aria-hidden='true'%3E%3Cdefs%3E%3ClinearGradient id='lg' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23eb6834'/%3E%3Cstop offset='.55' stop-color='%232a78d6'/%3E%3Cstop offset='1' stop-color='%231baf7a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M16 2.5C16 2.5 5.5 14 5.5 20.5a10.5 10.5 0 0 0 21 0C26.5 14 16 2.5 16 2.5z' fill='url(%23lg)'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-family='Inter,system-ui,sans-serif' font-size='9.5' font-weight='800' fill='%23fff'%3EpH%3C/text%3E%3C/svg%3E">
+  <script src="js/theme.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="site"><div class="inner">
-    <a class="brand" href="index.html">pH Neutralization Tool</a>
-    <nav>
-      <a href="index.html" aria-current="page">Home</a>
-      <a href="tool.html">Tool</a>
-      <a href="theory.html">Theory</a>
-      <a href="ai-process.html">AI Process</a>
-      <a href="model-comparison.html">Model Comparison</a>
-      <a href="video.html">Video & Transcript</a>
-      <a href="learned.html">What I Learned</a>
-      <a href="references.html">References</a>
-    </nav>
-  </div></header>
-  <main>
-    <h1>Why is pH control so hard?</h1>
-    <p class="lead">This is an <strong>AI project</strong> for a Process Dynamics &amp; Controls course:
-      an AI wrote the code, and the student's job is to understand, test and explain every equation
-      and every important line of it. The result is a practical design and simulation tool for an
-      engineer designing or troubleshooting a wastewater pH neutralization system. It shows
-      <em>why</em> pH control is hard — the process gain d(pH)/d(reagent flow) changes by orders of
-      magnitude near the equivalence point — and <em>how</em> engineers deal with it: staged tanks,
-      tank sizing, reagent strength and controller tuning.</p>
-    <div class="card">
-      <h2 style="margin-top:0">What the tool does</h2>
-      <ul>
-        <li>Computes pH from a charge balance (HCl, optional acetic acid, NaOH reagent; 25 °C, ideal solutions).</li>
-        <li>Plots the titration curve and the process gain versus pH.</li>
-        <li>Simulates 1–3 well-mixed tanks in series, each with a PI loop, valve limits, anti-windup, probe lag and dead time, under step disturbances.</li>
-        <li>Linearizes the model, gives the transfer function, and uses Routh–Hurwitz to show how the stable controller-gain range shrinks near pH 7.</li>
-        <li>Compares 1-, 2- and 3-stage designs by the valve rangeability and resolution each stage needs.</li>
-      </ul>
-      <p><a href="tool.html"><strong>Open the tool →</strong></a> &nbsp; <a href="theory.html">See the equations and code →</a></p>
+  <header class="site">
+    <div class="wrap">
+      <a class="brand" href="index.html"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eb6834"/><stop offset=".55" stop-color="#2a78d6"/><stop offset="1" stop-color="#1baf7a"/></linearGradient></defs><path d="M16 2.5C16 2.5 5.5 14 5.5 20.5a10.5 10.5 0 0 0 21 0C26.5 14 16 2.5 16 2.5z" fill="url(#lg)"/><text x="16" y="24" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="9.5" font-weight="800" fill="#fff">pH</text></svg><span>pH Neutralization Tool<small>Process Dynamics &amp; Controls</small></span></a>
+      <nav aria-label="Main">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="tool.html">Tool</a>
+        <a href="theory.html">Theory</a>
+        <a href="ai-process.html">AI Process</a>
+        <a href="model-comparison.html">Model Comparison</a>
+        <a href="video.html">Video</a>
+        <a href="learned.html">What I Learned</a>
+        <a href="references.html">References</a>
+      </nav>
+      <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle light/dark theme" title="Toggle theme"><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
     </div>
-    <p class="muted">Everything runs in your browser: the Python model (the same file that is unit-tested with pytest)
-      is executed by <a href="https://pyodide.org">Pyodide</a>. No server, no data leaves your computer.</p>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <div class="eyebrow">Process Dynamics &amp; Controls · AI project</div>
+          <h1>Why is <span class="grad">pH control</span> so hard?</h1>
+          <p class="lead">This is an <strong>AI project</strong>: an AI wrote the code, and my job was to understand,
+            test and defend every equation and every important line. The result is a practical tool for an engineer
+            designing or troubleshooting a wastewater neutralization system. It shows <em>why</em> pH is hard to control
+            (the process gain jumps by orders of magnitude near pH 7) and <em>how</em> engineers cope: staged tanks,
+            tank sizing, reagent strength and tuning.</p>
+          <div class="actions">
+            <a class="btn" href="tool.html">Open the tool <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            <a class="btn ghost" href="theory.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg> Equations &amp; code</a>
+          </div>
+        </div>
+        <figure class="hero-figure" style="margin:0">
+          <svg class="pid" viewBox="0 0 560 300" role="img" aria-labelledby="pid-title">
+  <title id="pid-title">Two-stage neutralization: acidic influent flows through two stirred tanks; each tank has a pH probe and controller that sets an NaOH valve.</title>
+  <!-- influent -->
+  <path class="pipe" d="M8 190 H72"/><path class="flow acid" d="M8 190 H72"/>
+  <text class="label" x="8" y="176">Influent</text><text class="small" x="8" y="214">HCl, pH ≈ 2</text>
+  <!-- tank 1 -->
+  <path class="vessel" d="M72 92 V232 a14 14 0 0 0 14 14 H178 a14 14 0 0 0 14 -14 V92"/>
+  <rect x="75" y="128" width="114" height="115" rx="10" style="fill:var(--acid);opacity:.22"/>
+  <line x1="166" y1="64" x2="166" y2="214" stroke="var(--text-2)" stroke-width="2"/>
+  <g class="impeller"><ellipse cx="166" cy="214" rx="22" ry="5" style="fill:var(--text-2)"/></g>
+  <text class="label" x="116" y="178" text-anchor="middle">Stage 1</text>
+  <text class="small" x="116" y="194" text-anchor="middle">SP pH 4</text>
+  <!-- NaOH to tank 1 -->
+  <path class="pipe" d="M100 18 V92" style="stroke-width:4"/><path class="flow base" d="M100 18 V92"/>
+  <path class="valve" d="M92 40 L108 52 V40 L92 52 Z"/>
+  <text class="small" x="62" y="22">NaOH</text>
+  <!-- loop 1 -->
+  <circle class="bubble" cx="222" cy="150" r="14"/><text class="bubble-text" x="222" y="153.5" text-anchor="middle">AT</text>
+  <path class="signal" d="M192 150 H208"/>
+  <circle class="bubble" cx="222" cy="46" r="14"/><text class="bubble-text" x="222" y="49.5" text-anchor="middle">AIC</text>
+  <path class="signal" d="M222 136 V60 M208 46 H108"/>
+  <!-- pipe to tank 2 -->
+  <path class="pipe" d="M192 226 H300"/><path class="flow base" d="M192 226 H300" style="stroke:var(--accent)"/>
+  <!-- tank 2 -->
+  <path class="vessel" d="M300 92 V232 a14 14 0 0 0 14 14 H406 a14 14 0 0 0 14 -14 V92"/>
+  <rect x="303" y="128" width="114" height="115" rx="10" style="fill:var(--neutral);opacity:.22"/>
+  <line x1="394" y1="64" x2="394" y2="214" stroke="var(--text-2)" stroke-width="2"/>
+  <g class="impeller" style="animation-delay:-0.4s"><ellipse cx="394" cy="214" rx="22" ry="5" style="fill:var(--text-2)"/></g>
+  <text class="label" x="344" y="178" text-anchor="middle">Stage 2</text>
+  <text class="small" x="344" y="194" text-anchor="middle">SP pH 7</text>
+  <!-- dilute NaOH to tank 2 -->
+  <path class="pipe" d="M328 18 V92" style="stroke-width:4"/><path class="flow base" d="M328 18 V92"/>
+  <path class="valve" d="M320 40 L336 52 V40 L320 52 Z"/>
+  <text class="small" x="266" y="22">dilute NaOH</text>
+  <!-- loop 2 -->
+  <circle class="bubble" cx="450" cy="150" r="14"/><text class="bubble-text" x="450" y="153.5" text-anchor="middle">AT</text>
+  <path class="signal" d="M420 150 H436"/>
+  <circle class="bubble" cx="450" cy="46" r="14"/><text class="bubble-text" x="450" y="49.5" text-anchor="middle">AIC</text>
+  <path class="signal" d="M450 136 V60 M436 46 H336"/>
+  <!-- effluent -->
+  <path class="pipe" d="M420 226 H552"/><path class="flow neutral" d="M420 226 H552"/>
+  <text class="label" x="478" y="212">Effluent</text><text class="small" x="478" y="250">pH 6–9</text>
+  <text class="small" x="8" y="290">AT = pH probe (analyzer)   ·   AIC = PI controller   ·   ⋈ = reagent valve</text>
+</svg>
+          <figcaption>A two-stage design, as simulated by the tool: coarse neutralization to pH 4, then a trim stage to pH 7 with dilute caustic.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="wrap stats" style="margin-top:28px">
+      <div class="grid-4">
+        <div class="card stat"><div class="value">5,000×</div><div class="label">rise in process gain d(pH)/d(F<sub>R</sub>) from pH 3 to pH 7, while reagent flow changes by only 10 %</div></div>
+        <div class="card stat"><div class="value">0.06<span class="unit">%</span></div><div class="label">gap between the Routh–Hurwitz stability limit and the full nonlinear simulation</div></div>
+        <div class="card stat"><div class="value">71</div><div class="label">automated pytest checks against hand calculations, scipy and numpy</div></div>
+        <div class="card stat"><div class="value">0</div><div class="label">servers: the tested Python model runs in your browser via WebAssembly</div></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <h2>What the tool does</h2>
+      <div class="grid-3">
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/><path d="M7 15h10"/></svg></div><h3>Equilibrium from a charge balance</h3>
+          <p>HCl, optional acetic acid and NaOH at 25 °C. pH is found by bisection on a function that always has exactly one root.</p></div>
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20c5 0 6-2 7-6s1-8 3-8 3 4 4 6 2 2 4 2"/><path d="M3 3v18h18"/></svg></div><h3>Titration curve &amp; process gain</h3>
+          <p>See the steep cliff at equivalence and the gain d(pH)/d(reagent) on a log scale, with buffering by a weak acid.</p></div>
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="7" height="13" rx="1.5"/><rect x="14" y="6" width="7" height="13" rx="1.5"/><path d="M10 15h4M6.5 3v3M17.5 3v3"/></svg></div><h3>1–3 stirred tanks in series</h3>
+          <p>Each stage has its own NaOH valve and PI loop, with valve limits, anti-windup, probe lag and dead time.</p></div>
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div><h3>Disturbance response</h3>
+          <p>Step the influent flow or acid strength and watch the true and measured pH, and the valve hit its limits.</p></div>
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div><h3>Routh–Hurwitz stability</h3>
+          <p>Linearize, get G<sub>p</sub>(s) = K<sub>p</sub>/(τs + 1), and see the stable K<sub>c</sub> range collapse near pH 7.</p></div>
+        <div class="card feature"><div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><h3>Staging design helper</h3>
+          <p>Compare 1-, 2- and 3-stage designs by the valve rangeability and resolution each stage actually needs.</p></div>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="card step"><h3>Track what reactions can't change</h3><p>Total chloride, sodium and acetate are balanced like a mixing problem. No reaction terms, no stiffness.</p></div>
+        <div class="card step"><h3>Solve for pH algebraically</h3><p>Electroneutrality turns the three totals into a pH at every time step.</p></div>
+        <div class="card step"><h3>Linearize and apply Routh</h3><p>The tank gain is the titration slope, so the stability limit is (lags) ÷ (chemistry).</p></div>
+        <div class="card step"><h3>Design around it</h3><p>Stage the neutralization so each valve works on a part of the curve it can actually control.</p></div>
+      </div>
+      <div class="note" style="margin-top:24px">Everything you see is computed by the same Python file that the automated tests check.
+        <a href="theory.html">The Theory page</a> shows each equation next to the exact code that implements it.</div>
+    </section>
   </main>
+  <footer class="site">
+    <div class="wrap">
+      <span>Course project · Process Dynamics &amp; Controls · Code written by AI, checked by 71 automated tests.</span>
+      <span><a href="https://github.com/DrewDebugs/pH-neutralization-tool">Source on GitHub</a> · Runs entirely in your browser</span>
+    </div>
+  </footer>
 </body>
 </html>

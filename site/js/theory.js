@@ -7,25 +7,31 @@ function escapeHtml(text) {
 }
 
 async function showTheory() {
-  const status = document.getElementById("status");
-  const entries = await callPy("theory", undefined, (t) => (status.textContent = t));
+  const statusText = document.getElementById("status-text");
+  document.getElementById("status").classList.add("busy");
+  const entries = await callPy("theory", undefined, (t) => (statusText.textContent = t));
   const container = document.getElementById("equations");
+  const toc = document.getElementById("toc");
   container.innerHTML = "";
-  for (const e of entries) {
-    const card = document.createElement("div");
-    card.className = "card";
+  entries.forEach((e, i) => {
+    const anchor = "eq-" + i;
+    const card = document.createElement("article");
+    card.className = "card eq-card";
+    card.id = anchor;
     card.innerHTML = `
       <h3><span class="tag">${e.id}</span>${e.title}</h3>
-      <div class="eq-row">
-        <div class="math"></div>
-        <pre class="code"><code>${escapeHtml(e.code)}</code></pre>
-      </div>`;
+      <div class="math"></div>
+      <p class="src">phsim.${e.function}</p>
+      <pre class="code"><code class="language-python">${escapeHtml(e.code)}</code></pre>`;
     katex.render(e.latex, card.querySelector(".math"), { displayMode: true, throwOnError: false });
+    if (window.hljs) hljs.highlightElement(card.querySelector("code"));
     container.appendChild(card);
-  }
-  status.textContent = "";
+    toc.insertAdjacentHTML("beforeend",
+      `<a href="#${anchor}"><span class="tid">${e.id}</span>${e.title}</a>`);
+  });
+  document.getElementById("status").remove();
 }
 
 showTheory().catch((err) => {
-  document.getElementById("status").textContent = "Could not load Python: " + err.message;
+  document.getElementById("status-text").textContent = "Could not load Python: " + err.message;
 });
