@@ -6,7 +6,7 @@ Google Books, publisher site), write the edition and page, and change the status
 
 | # | Source | Used for | Where in project | Status |
 |---|---|---|---|---|
-| 1 | Seborg, Edgar, Mellichamp & Doyle, *Process Dynamics and Control*, 4th ed., Wiley, 2016 | Linearization, transfer functions, Routh array, Padé approximation, PI control | `linear.py`, Theory page | Exists (confident). Page numbers: ☐ |
+| 1 | Seborg, Edgar, Mellichamp & Doyle, *Process Dynamics and Control*, 4th ed., Wiley, 2016 | Linearization, transfer functions, Routh array, Padé approximation, PI control | `linear.py`, Theory page | Student has the book (edition still to confirm from the title page). **Padé: verified**: Section 6.2, p. 91, Eq. 6-29 (1/1 Padé) = the formula in `linear.loop_polynomials`. **Routh**: Section 11.4.2 "Routh Stability Criterion"; printed page ☐. **Ziegler–Nichols**: index gives pp. 211, 215; PI factors ☐ |
 | 2 | Ziegler & Nichols, "Optimum settings for automatic controllers," *Trans. ASME* 64 (1942) 759–768 | PI tuning Kc = 0.45 Kc,u, τI = Pu/1.2 | `linear.ziegler_nichols_pi`, Auto-tune button | Exists (confident). Confirm the 0.45 and 1/1.2 factors in the paper or in ref 1: ☐ |
 | 3 | Harris, *Quantitative Chemical Analysis*, W. H. Freeman | Charge balance method, Kw = 1.0e-14 at 25 °C, acetic acid pKa = 4.757 | `constants.py`, `chemistry.py` | Exists (confident). Edition + table/page for pKa: ☐ |
 | 4 | Shinskey, *pH and pIon Control in Process and Waste Streams*, Wiley, 1973 | Background on why pH control is hard; staging | References page only | Exists (confident). Nothing quoted yet. |
