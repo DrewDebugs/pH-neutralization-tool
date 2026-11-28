@@ -1,7 +1,7 @@
 # AI log 1: building the project with Claude Code
 
 - **Tool:** Claude Code (Anthropic), cloud session, with access to this repository
-- **Model:** _(fill in: shown in the Claude Code session details)_
+- **Model:** Opus 5.5 (Medium)
 - **Dates:** 2026-11-23 to 2026-11-28
 - **Role of the AI:** wrote the plan, all code, tests and website; deployed to GitHub Pages
 - **Role of the student:** wrote the requirements, answered design questions, approved
