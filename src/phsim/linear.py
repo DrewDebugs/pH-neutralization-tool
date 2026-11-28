@@ -73,7 +73,8 @@ def loop_polynomials(Kp, tau, tau_v, tau_m, theta):
 
     G_v = 1/(tau_v s + 1),  G_p = Kp/(tau s + 1),  G_m = e^(-theta s)/(tau_m s + 1)
     Dead time by 1st-order Pade: e^(-theta s) ~ (1 - theta s/2)/(1 + theta s/2)
-    (APPROXIMATE; exact only as theta*omega -> 0).
+    (the "1/1 Pade approximation", Seborg et al., 4th ed., Eq. 6-29).
+    APPROXIMATE: exact only as theta*omega -> 0.
     """
     num = [Kp]
     den = poly_mul(poly_mul([tau_v, 1.0], [tau, 1.0]), [tau_m, 1.0])
@@ -191,7 +192,12 @@ def ultimate_gain(Kp, tau, tau_v, tau_m, theta=0.0):
 
 
 def ziegler_nichols_pi(Kcu, Pu):
-    """Ziegler-Nichols (1942) closed-loop PI rule: Kc = 0.45 Kcu, tauI = Pu/1.2."""
+    """Ziegler-Nichols (1942) continuous-cycling PI rule: Kc = 0.45 Kcu, tauI = Pu/1.2.
+
+    Source: Seborg et al., Process Dynamics and Control, 4th ed., Table 12.7.
+    Seborg (Section 12.3) notes these settings aim for a 1/4 decay ratio, which
+    is "considered to be excessively oscillatory" for most process control.
+    """
     if math.isinf(Kcu):
         return math.inf, math.inf
     return 0.45 * Kcu, Pu / 1.2
