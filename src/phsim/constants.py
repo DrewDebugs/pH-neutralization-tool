@@ -20,8 +20,9 @@ import math
 # 1.0e-14 is used exactly, so a neutral solution is exactly pH 7.00.
 KW = 1.0e-14
 
-# Acid-dissociation constant of acetic acid at 25 C, pKa = 4.757
-# (Harris, Quantitative Chemical Analysis, table of acid-dissociation constants).
+# Acid-dissociation constant of acetic acid at 25 C.
+# Harris (Quantitative Chemical Analysis) gives pKa = 4.756, i.e. Ka = 1.754e-5;
+# 1.75e-5 is that value rounded to 3 significant figures (pKa 4.757, a 0.001 pH difference).
 KA_ACETIC = 1.75e-5
 
 # ln(10): appears whenever we differentiate 10**(-pH) with respect to pH,
