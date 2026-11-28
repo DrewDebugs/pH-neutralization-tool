@@ -100,6 +100,12 @@ and "facts" such as the 5,000× gain rise, the Routh-vs-simulation gap (the same
 test L5), the pH 6→8 caustic difference, and the test count (from `pytest --collect-only`).
 Change the model and the Home page follows.
 
+## Hand calculations
+
+[`docs/HAND_CALCULATIONS.md`](docs/HAND_CALCULATIONS.md) reworks the key tests with a calculator:
+strong acid (including 1×10⁻⁸ M HCl → pH 6.98), weak acid at half-equivalence, the Routh
+limit at set point 4, and the anti-windup test.
+
 ## Measured facts
 
 | Item | Value |
@@ -124,6 +130,30 @@ Change the model and the Home page follows.
 - **Acetic acid in the design helper** is a scenario button, not the default: with the
   default intermediate set points (below the acetic pKa of 4.76) every design becomes
   infeasible, which is itself a design lesson (see the note on the Tool page).
+
+## Known limitations (stated openly)
+
+Model assumptions (each is a deliberate simplification for a B.S.-level tool):
+- Ideal solutions (activity coefficients = 1) at a fixed 25 °C; K<sub>w</sub> and K<sub>a</sub> do not vary with temperature.
+- Perfectly mixed tanks (no mixing dead time); constant volume; additive volumes.
+- Instantaneous acid–base equilibrium; no CO<sub>2</sub> exchange, no precipitation.
+- Linear valve with a first-order lag; no characteristic curve, stiction or deadband.
+- Dead time rounded to whole time steps; the controller is digital with a fixed sample time.
+
+Analysis limits:
+- Routh–Hurwitz is applied to the linearized loop at one operating point; far from it the
+  nonlinear loop can behave differently (that is the point of the tool, but it is a limit).
+- Dead time enters Routh only through a 1st-order Padé approximation (1.8 % error in test L7).
+- Ziegler–Nichols tuning is aggressive (aims for quarter-amplitude decay); oscillatory
+  responses are expected.
+
+Design helper:
+- Valve rangeability (50:1) and resolution (0.5 %) defaults are assumed, not sourced.
+- The intermediate set points of the default 2- and 3-stage designs (pH 4; pH 3 and 4.5) are
+  illustrative choices, not a literature rule (stated in `design.py`). With acetic acid present
+  every default design is infeasible; finding a good mixed-acid staging is left open.
+
+Sources: see `docs/REFERENCE_CHECKLIST.md` for the verification status of each citation.
 
 ## What you should be able to explain (checklist)
 
